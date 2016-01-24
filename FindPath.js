@@ -19,15 +19,22 @@ var items =
     }
 ]}}
 
+/** Check if the string is a number or not. 
+  * Returns true if it's a number, false otherwise */
 function isNumeric(num){
     return !isNaN(num);
 }
 
+/** Returns the full path given a value. 
+  * @param: data is the JSON file
+            value is the value that we need to find
+            path is the previous path */
 function findPath(data, value, path)
 {
     path = path || "";
-    var fullpath = [];
+    var finalpath = [];
     
+    // Check if data is valid
     if(typeof(data) != "object" || Object.keys(data).length == 0) 
         return ( "input is not the correct type or object is empty" );
 
@@ -36,22 +43,19 @@ function findPath(data, value, path)
             return ( path + "/" + obj);
             
         else if (typeof data[obj] == "object") {
-            var tmpPath;
+            var temp;
             if ( isNumeric(obj) )
-                tmpPath = findPath(data[obj], value,  path + "/[" + obj + "]");
+                temp = findPath(data[obj], value,  path + "[" + obj + "]");
             else 
-                tmpPath = findPath(data[obj], value,  path + "/" + obj);
-            //console.log(tmpPath);
-            if (tmpPath.length) {
-                fullpath.push(tmpPath);
+                temp = findPath(data[obj], value,  path + "/" + obj);
+                
+            if (temp.length) {
+                finalpath.push(temp);
             }
         }
     }
-
-
-    fullpath = fullpath.toString();
-    return fullpath;
-
+        
+    return finalpath.toString();
 }
 
 var text = findPath(items, "item2");
